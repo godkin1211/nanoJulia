@@ -15,6 +15,7 @@ Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 XAM = "d759349c-bcba-11e9-07c2-5b90f8f05f7c"
 
 [compat]
+FASTX = "1.1"
 julia = "1.4"
 
 [extras]
