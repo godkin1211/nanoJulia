@@ -1,19 +1,23 @@
 module nanoJulia
-using Statistics
-export calculate_mean_readqual
+using Statistics, FASTX, DataFrames, Printf
+export nanoread
+# Readinfo types
+include("datatype.jl")
+include("utilities.jl")
+include("record_handler.jl")
+include("info_handler.jl")
+include("statistics_handler.jl")
 
-phred2prob(q::UInt8) = 10^(q/(-10))
-
-prob2phred(p::Float64) = -10log10(p)
-
-function calculate_mean_readqual(quals::Array{UInt8, 1})::Float64
-	quals .|> phred2prob |> mean |> prob2phred |> q->round(q, digits = 1)
-end
-
-function remove_bad_read!(records::Array{FASTX.FASTQ.Record, 1})
-	seqlengths = FASTQ.seqlen.(records)
-	quallengths = map(i -> length(FASTQ.quality(i)), records)
-	return records[seqlengths .==  quallengths]
+# FASTQ File Reader
+function nanoread(input::FASTX.FASTQ.Reader)
+	records = collect(input);
+	remove_bad_read!(records);
+	recordnum = length(records);
+	readsinfo = Array{Union{FastqInfo, Missing},1}(missing, recordnum);
+	Threads.@threads for i in 1:recordnum
+		@inbounds readsinfo[i] = get_info(records[i])
+	end
+	extract_info(readsinfo)
 end
 
 end
