@@ -1,5 +1,5 @@
 module nanoJulia
-using Statistics, FASTX, DataFrames, Printf
+using Statistics, FASTX, DataFrames, Printf, Formatting
 export nanoread
 # Readinfo types
 include("datatype.jl")

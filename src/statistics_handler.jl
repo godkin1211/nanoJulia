@@ -1,6 +1,9 @@
 # Subsetting info-table with quality
 getQScorePart(df::DataFrame, qscore::Int64) = df[df.quality .>= qscore, :]
 
+
+
+
 function generateStatSummary(df::DataFrame)
 	stat_summary = describe(df)
 	if ncol(df) == 3
