@@ -27,6 +27,10 @@ end
 # 'o' means the number of gap opens. 
 calculate_identity(n::Int64, m::Int64, g::Int64, o::Int64) = round((1.0 - (n-g+o)/(m+o)) * 100, digits = 3)
 
+
+# Calculate sum of total read lengths
+totalLen(lengths::Array{Int64,1}) = sum(lengths)
+
 # Calculate N50
 function calculate_N50(len_records::Array{Int64,1}, total_length::Int64)::Int64
 	recordnum = length(len_records);

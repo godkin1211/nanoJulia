@@ -1,7 +1,6 @@
 # Subsetting info-table with quality
 getQScorePart(df::DataFrame, qscore::Int64) = df[df.quality .>= qscore, :]
 
-totalLen(lengths::Array{Int64,1}) = sum(lengths)
 
 function plotReadLen2Qaul(length_to_quality_df::DataFrames.DataFrame, N50::Int64)
 	gr()
