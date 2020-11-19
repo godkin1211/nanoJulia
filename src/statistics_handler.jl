@@ -1,27 +1,45 @@
 # Subsetting info-table with quality
 getQScorePart(df::DataFrame, qscore::Int64) = df[df.quality .>= qscore, :]
 
-
-function plotReadLen2Qaul(length_to_quality_df::DataFrames.DataFrame, N50::Int64)
+function plotReadLen2Qaul(df::DataFrames.DataFrame, N50::Int64)
 	gr()
-	plot(length_to_quality_df.length, 
-		length_to_quality_df.quality, 
-		seriestype = :scatter, 
-		title = "Read Length vs Quality", 
-		legend = false, 
-		xlabel = "Read Length (bp)", 
-		ylabel = "Phred Score", 
-		dpi = 300)
-	vline!([N50], lw = 2)
-	savefig("read_length_vs_quality.png")
+	if "identity" in names(df)
+		plot(df.length,
+			df.quality,
+			zcolor = df.identity,
+			seriestype = :scatter,
+			title = "Read Length vs Quality",
+			xlabel = "Read Length (bp)",
+			ylabel = "Phred Score",
+			lab = "Identity (%)",
+			dpi = 300)
+	else
+		plot(df.length, 
+			df.quality, 
+			seriestype = :scatter, 
+			title = "Read Length vs Quality", 
+			legend = false, 
+			xlabel = "Read Length (bp)", 
+			ylabel = "Phred Score", 
+			dpi = 300)
+	end
+	vline!([N50], lw = 2, lab = "N50")
+	savefig("read_length_vs_quality_dot.png")
 end
 
+function plotHistogram2D(df::DataFrames.DataFrame)
+	gr()
+	historgam2d(df.length, df.quality, nbins = 50)
+	savefig("read_length_vs_quality_histogram.png")
+end
 
-function generateStatSummary(length_to_quality_df::DataFrames.DataFrame, totalLength::Int64, N50::Int64)
-	stat_summary = describe(length_to_quality_df)
-	if ncol(length_to_quality_df) == 3
+function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::Int64)
+	stat_summary = describe(df)
+	if ncol(df) == 3
 		meanQual, meanLen, meanIdent = tuple(round.(stat_summary[!,:mean], digits=1)...)
 		medianQual, medianLen, medianIdent = tuple(stat_summary[!,:median]...)
+		meanIdenttxt = @sprintf "Mean Identity: %24.1f" meanIdent
+		medianIdenttxt = @sprintf "Median Identity: %22.1f" medianIdent
 	else
 		meanQual, meanLen = tuple(round.(stat_summary[!,:mean], digits=1)...)
 		medianQual, medianLen = tuple(stat_summary[!,:median]...)
@@ -32,9 +50,7 @@ function generateStatSummary(length_to_quality_df::DataFrames.DataFrame, totalLe
 	medianLentxt = @sprintf "Median Read Length: %19.1f" medianLen
 	readN50txt = @sprintf "Read N50: %29s" format(N50, commas=true)
 	totalBasestxt = @sprintf "Total Bases: %26s" format(totalLength, commas=true)
-	if ncol(length_to_quality_df) == 3
-		meanIdenttxt = @sprintf "Mean Identity: %28.1f" meanIdent
-		medianIdenttxt = @sprintf "Median Identity: %20.1f" medianIdent
+	if ncol(df) == 3
 		open("statistics_summary.txt", "w") do io
 			write(io, "$meanQualtxt\n$meanLentxt\n$meanIdenttxt\n$medianQualtxt\n$medianLentxt\n$medianIdenttxt\n$readN50txt\n$totalBasestxt")
 		end

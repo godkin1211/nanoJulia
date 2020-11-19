@@ -5,20 +5,31 @@ function remove_bad_read!(records::Array{FASTX.FASTQ.Record, 1})
 	return records[seq_lengths .==  qual_lengths]
 end
 
-# Parse FASTQ.Record
+# Parse BAM.Record
 function get_info end
 
 function get_info(record::XAM.BAM.Record)
-	nm = Int(record["NM"])
-	matches, gaps, cgaps = parse_cigar(BAM.cigar_rle(record))
+	flag_check = BAM.flag(record) |> Int
+	qual_check = BAM.quality(record) |> length
+	if flag_check == 4
+		return nothing
+	end
+
+	if qual_check == 0
+		return nothing
+	end
+
+	nm = record["NM"] |> Int
+	matches, gaps, cgaps = BAM.cigar_rle(record) |> parse_cigar
 	readident = calculate_identity(nm, matches, gaps, cgaps)
 	readlen = BAM.seqlength(record)
-	readqual = calculate_mean_readqual(BAM.quality(record))
-	BAMInfo(readqual, readlen, readident)
+	readqual = BAM.quality(record) |> calculate_mean_readqual
+	return BAMInfo(readqual, readlen, readident)
 end
 
+# Parse FASTQ.Record
 function get_info(record::FASTX.FASTQ.Record)
-	readqual = calculate_mean_readqual(FASTQ.quality(record))
+	readqual = FASTQ.quality(record) |> calculate_mean_readqual
 	readlen = FASTQ.seqlen(record)
 	FastqInfo(readqual, readlen)
 end
