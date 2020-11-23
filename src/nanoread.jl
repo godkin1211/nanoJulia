@@ -25,3 +25,34 @@ function nanoread(input::XAM.BAM.Reader)
     end
 	extract_info(readsinfo)
 end
+
+
+# Miltiple-reads FAST5 File Reader
+function nanoread(input::HDF5File, h5ver::String)
+    readIDs = names(input)
+	readsnum = length(readIDs)
+	readsinfo = Array{Union{FastqInfo, Missing},1}(missing, readsnum);
+	@inbounds for i in 1:readsnum
+		thisread = readIDs[i]
+		readrecord = input[thisread]
+		readfastq = parse_f5read_record(readrecord, "Basecall_1D_00")
+		if FASTQ.seqlen(readfastq) != length(FASTQ.quality(readfastq))
+			continue
+		end
+		readsinfo[i] = get_info(readfastq)
+	end
+	filter!(e -> e !== missing, readsinfo)
+	extract_info(readsinfo)
+end
+
+
+# Single-read FAST5 File Reader
+function nanoread(input::HDF5File, h5ver::Float64)
+	readfastq = parse_f5read_record(input, "Basecall_1D_000")
+	if FASTQ.seqlen(readfastq) != length(FASTQ.quality(readfastq))
+		return missing
+	else
+		readinfo = get_info(readfastq)
+		return DataFrame(quality = readinfo.quality, length = readinfo.length)
+	end
+end

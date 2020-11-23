@@ -5,6 +5,22 @@ function remove_bad_read!(records::Array{FASTX.FASTQ.Record, 1})
 	return records[seq_lengths .==  qual_lengths]
 end
 
+
+# Methods for parsing H5Record
+
+function parse_f5read_record end
+
+function parse_f5read_record(record::HDF5Group, signalpath::String)::FASTX.FASTQ.Record
+	fastqpath = string("Analyses/$signalpath/BaseCalled_template/Fastq");
+	fastq = FASTQ.Record(read(record, fastqpath))
+end
+
+function parse_f5read_record(record::HDF5File, signalpath::String)::FASTX.FASTQ.Record
+	fastqpath = string("Analyses/$signalpath/BaseCalled_template/Fastq");
+	fastq = FASTQ.Record(read(record, fastqpath))
+end
+
+
 # Parse BAM.Record
 function get_info end
 
