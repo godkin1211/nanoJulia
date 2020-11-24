@@ -35,7 +35,7 @@ function nanoread(input::HDF5File, h5ver::String)
 	@inbounds for i in 1:readsnum
 		thisread = readIDs[i]
 		readrecord = input[thisread]
-		readfastq = parse_f5read_record(readrecord, "Basecall_1D_00")
+		readfastq = parse_f5read_record(readrecord, "Basecall_1D_001")
 		if FASTQ.seqlen(readfastq) != length(FASTQ.quality(readfastq))
 			continue
 		end
@@ -48,7 +48,7 @@ end
 
 # Single-read FAST5 File Reader
 function nanoread(input::HDF5File, h5ver::Float64)
-	readfastq = parse_f5read_record(input, "Basecall_1D_000")
+	readfastq = parse_f5read_record(input, "Basecall_1D_001")
 	if FASTQ.seqlen(readfastq) != length(FASTQ.quality(readfastq))
 		return missing
 	else
