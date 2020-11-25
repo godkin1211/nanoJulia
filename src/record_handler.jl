@@ -15,15 +15,23 @@ function parse_f5read_record(record::HDF5Group, signalpath::String)::FASTX.FASTQ
 	fastq = FASTQ.Record(read(record, fastqpath))
 end
 
-function parse_f5read_record(record::HDF5File, signalpath::String)::FASTX.FASTQ.Record
+function parse_f5read_record(record::HDF5.File, signalpath::String)::FASTX.FASTQ.Record
 	fastqpath = string("Analyses/$signalpath/BaseCalled_template/Fastq");
 	fastq = FASTQ.Record(read(record, fastqpath))
 end
 
 
-# Parse BAM.Record
+# Methods for Record-parsing
 function get_info end
 
+# Parse HDF5.Group
+function get_info(record::HDF5.Attributes)
+	readqual = read(record, "mean_qscore")
+	readlen = read(record, "sequence_length")
+	FastqInfo(readqual, readlen)
+end
+
+# Parse BAM.Record
 function get_info(record::XAM.BAM.Record)
 	flag_check = BAM.flag(record) |> Int
 	qual_check = BAM.quality(record) |> length

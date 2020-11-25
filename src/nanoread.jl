@@ -28,31 +28,26 @@ end
 
 
 # Miltiple-reads FAST5 File Reader
-function nanoread(input::HDF5File, h5ver::String)
+function nanoread(input::HDF5File, h5ver::String, basecallGroup::String)
+	dirpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
     readIDs = names(input)
 	readsnum = length(readIDs)
-	readsinfo = Array{Union{FastqInfo, Missing},1}(missing, readsnum);
+	readsinfo = Array{Union{FastqInfo, Missing},1}(missing, readsnum)
 	@inbounds for i in 1:readsnum
 		thisread = readIDs[i]
 		readrecord = input[thisread]
-		readfastq = parse_f5read_record(readrecord, "Basecall_1D_001")
-		if FASTQ.seqlen(readfastq) != length(FASTQ.quality(readfastq))
-			continue
-		end
-		readsinfo[i] = get_info(readfastq)
+		summaryInfo = attrs(readrecord[dirpath])
+		readsinfo[i] = get_info(summaryInfo)
 	end
 	filter!(e -> e !== missing, readsinfo)
-	extract_info(readsinfo)
+	return extract_info(readsinfo)
 end
 
 
 # Single-read FAST5 File Reader
-function nanoread(input::HDF5File, h5ver::Float64)
-	readfastq = parse_f5read_record(input, "Basecall_1D_001")
-	if FASTQ.seqlen(readfastq) != length(FASTQ.quality(readfastq))
-		return missing
-	else
-		readinfo = get_info(readfastq)
-		return DataFrame(quality = readinfo.quality, length = readinfo.length)
-	end
+function nanoread(input::HDF5.File, h5ver::Float64, basecallGroup::String)
+	dirpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
+	summaryInfo = attrs(input[dirpath])
+	readinfo = get_info(summaryInfo)
+	return DataFrame(quality = readinfo.quality, length = readinfo.length)
 end
