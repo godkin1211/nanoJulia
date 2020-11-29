@@ -1,5 +1,5 @@
 push!(LOAD_PATH, "src/")
-using ArgParse, HDF5, DataFrames, nanoJulia
+using ArgParse, HDF5, DataFrames, CSV, nanoJulia
 
 # Arguments parser
 function parse_commandline()
@@ -25,6 +25,7 @@ function main()
 	recursive = parsed_args["recursive"]
 	inputdir = parsed_args["inputdir"]
 	outputdir = parsed_args["outputdir"]
+	length2qualityTextFile = joinpath(outputdir, "readlength_vs_readquality.tsv") 
 	if recursive
 		println("Recursive mode launched!")
 		filelist = []
@@ -40,8 +41,11 @@ function main()
 		filelist = joinpath.(inputdir, readdir(inputdir))
 	end
 
-	output = mapreduce(f->readFast5(f), vcat, filelist)
-	println(output)
+	output_table = mapreduce(f->readFast5(f), vcat, filelist)
+	output_table |> CSV.write(length2qualityTextFile)
+	totalLength = totalLen(output_table.length)
+	n50 = calculate_N50(output_table.length, totalLength)
+	generateStatSummary(output_table, totalLength, n50, outputdirs)
 end
 
 main()

@@ -39,7 +39,7 @@ function plotReadLen2QualHistogram2D(df::DataFrames.DataFrame)
 	savefig("read_length_vs_quality_histogram.png")
 end
 
-function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::Int64)::DataFrames.DataFrame
+function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::Int64, outputDir::String)::DataFrames.DataFrame
 	stat_summary = describe(df)
 	output_df = DataFrame(Property = AbstractString[], Value = Number[])
 	if ncol(df) == 3
@@ -65,12 +65,13 @@ function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::
 	medianLentxt = @sprintf "Median Read Length: %19.1f" medianLen
 	readN50txt = @sprintf "Read N50: %29s" format(N50, commas=true)
 	totalBasestxt = @sprintf "Total Bases: %26s" format(totalLength, commas=true)
+	outputfile = joinpath(outputDir, "statistics_summary.txt")
 	if ncol(df) == 3
-		open("statistics_summary.txt", "w") do io
+		open(outputfile, "w") do io
 			write(io, "$meanQualtxt\n$meanLentxt\n$meanIdenttxt\n$medianQualtxt\n$medianLentxt\n$medianIdenttxt\n$readN50txt\n$totalBasestxt")
 		end
 	else
-		open("statistics_summary.txt", "w") do io
+		open(outputfile, "w") do io
 			write(io, "$meanQualtxt\n$meanLentxt\n$medianQualtxt\n$medianLentxt\n$readN50txt\n$totalBasestxt")
 		end
 	end
