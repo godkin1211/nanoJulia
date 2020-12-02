@@ -41,6 +41,7 @@ end
 
 function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::Int64, outputDir::String)::DataFrames.DataFrame
 	stat_summary = describe(df)
+	readNum = size(df, 1)
 	output_df = DataFrame(Property = AbstractString[], Value = Number[])
 	if ncol(df) == 3
 		meanQual, meanLen, meanIdent = tuple(round.(stat_summary[!,:mean], digits=1)...)
@@ -58,21 +59,23 @@ function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::
 	push!(output_df, ("Mean Read Quality", meanQual))
 	push!(output_df, ("Median Read Quality", medianQual))
 	push!(output_df, ("Read N50", N50))
+	push!(output_df, ("Read Numbers", readNum))
 	push!(output_df, ("Total Bases", totalLength))
 	meanQualtxt = @sprintf "Mean Read Quality: %20.1f" meanQual
 	meanLentxt = @sprintf "Mean Read Length: %21.1f" meanLen
 	medianQualtxt = @sprintf "Median Read Quality: %18.1f" medianQual
 	medianLentxt = @sprintf "Median Read Length: %19.1f" medianLen
 	readN50txt = @sprintf "Read N50: %29s" format(N50, commas=true)
+	readNumtxt = @sprintf "Read Number: %26s" format(readNum, commas=true)
 	totalBasestxt = @sprintf "Total Bases: %26s" format(totalLength, commas=true)
 	outputfile = joinpath(outputDir, "statistics_summary.txt")
 	if ncol(df) == 3
 		open(outputfile, "w") do io
-			write(io, "$meanQualtxt\n$meanLentxt\n$meanIdenttxt\n$medianQualtxt\n$medianLentxt\n$medianIdenttxt\n$readN50txt\n$totalBasestxt")
+			write(io, "$meanQualtxt\n$meanLentxt\n$meanIdenttxt\n$medianQualtxt\n$medianLentxt\n$medianIdenttxt\n$readN50txt\n$readNumtxt\n$totalBasestxt")
 		end
 	else
 		open(outputfile, "w") do io
-			write(io, "$meanQualtxt\n$meanLentxt\n$medianQualtxt\n$medianLentxt\n$readN50txt\n$totalBasestxt")
+			write(io, "$meanQualtxt\n$meanLentxt\n$medianQualtxt\n$medianLentxt\n$readN50txt\n$readNumtxt\n$totalBasestxt")
 		end
 	end
 	return output_df
