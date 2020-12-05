@@ -44,7 +44,22 @@ end
 function plotReadLen2QualHistogram2D(df::DataFrames.DataFrame, outputDir::String)
 	gr()
 	outputfile = joinpath(outputDir, "read_length_vs_quality_histogram.png")
-	historgam2d(df.length, df.quality, nbins = 50)
+	histogram2d(df.length, df.quality, nbins = 50)
+	savefig(outputfile)
+end
+
+function plotReadLenDist(lengthRecords::Array{Int64,1}, N50::Int64, outputDir::Sting)
+	gr()
+	outputfile = joinpath(outputDir, "read_length_distribution_histogram.png")
+	plot(lengthRecords, 
+		 seriestype=:histogram, 
+		 bins=400, 
+		 minorticks=true, 
+		 legend=false, 
+		 xlabel = "Read Length (bp)",
+		 ylabel = "Read Counts",
+		 dpi = 300)
+	vline!([N50], lw=2, lab="N50")
 	savefig(outputfile)
 end
 
@@ -86,31 +101,32 @@ function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::
 	totalBasestxt = @sprintf "Total Bases: %33s" format(totalLength, commas=true)
 	readsQ7txt = @sprintf "Reads with quality score > 7: %16s" format(readsQ7, commas=true)
 	basesQ7txt = @sprintf "Bases with quality score > 7: %16s" format(basesQ7, commas=true)
-	percQ7txt = @sprintf "Percentage of bases (Q>7): %20s" percQ7
+	percQ7txt = @sprintf "Percentage of bases (Q>7): %19s" percQ7
 	readsQ10txt = @sprintf "Reads with quality score > 10: %15s" format(readsQ10, commas=true)
 	basesQ10txt = @sprintf "Bases with quality score > 10: %15s" format(basesQ10, commas=true)
-	percQ10txt = @sprintf "Percentage of bases (Q>10): %20s" percQ10
+	percQ10txt = @sprintf "Percentage of bases (Q>10): %18s" percQ10
 	readsQ12txt = @sprintf "Reads with quality score > 12: %15s" format(readsQ12, commas=true)
 	basesQ12txt = @sprintf "Bases with quality score > 12: %15s" format(basesQ12, commas=true)
-	percQ12txt = @sprintf "Percentage of bases (Q>12): %20s" percQ12
+	percQ12txt = @sprintf "Percentage of bases (Q>12): %18s" percQ12
 	readsQ15txt = @sprintf "Reads with quality score > 15: %15s" format(readsQ15, commas=true)
 	basesQ15txt = @sprintf "Bases with quality score > 15: %15s" format(basesQ15, commas=true)
-	percQ15txt = @sprintf "Percentage of bases (Q>15): %20s" percQ15
+	percQ15txt = @sprintf "Percentage of bases (Q>15): %18s" percQ15
 
 	outputfile = joinpath(outputDir, "statistics_summary.txt")
 	open(outputfile, "w") do io
 		if ncol(df) == 3
-			write(io, "$meanQualtxt\n$meanLentxt\n$meanIdenttxt\n$medianQualtxt\n$medianLentxt\n$medianIdenttxt\n$readN50txt\n$readNumtxt\n$totalBasestxt")
+			write(io, "$meanQualtxt\n$meanLentxt\n$meanIdenttxt\n$medianQualtxt\n$medianLentxt\n$medianIdenttxt\n$readN50txt\n$readNumtxt\n$totalBasestxt\n")
 		else
-			write(io, "$meanQualtxt\n$meanLentxt\n$medianQualtxt\n$medianLentxt\n$readN50txt\n$readNumtxt\n$totalBasestxt")
+			write(io, "$meanQualtxt\n$meanLentxt\n$medianQualtxt\n$medianLentxt\n$readN50txt\n$readNumtxt\n$totalBasestxt\n")
 		end
-		write(io, "$readsQ7txt\n$basesQ7txt\n$percQ7txt")
-		write(io, "$readsQ10txt\n$basesQ10txt\n$percQ10txt")
-		write(io, "$readsQ12txt\n$basesQ12txt\n$percQ12txt")
-		write(io, "$readsQ15txt\n$basesQ15txt\n$percQ15txt")
+		write(io, "$readsQ7txt\n$basesQ7txt\n$percQ7txt\n")
+		write(io, "$readsQ10txt\n$basesQ10txt\n$percQ10txt\n")
+		write(io, "$readsQ12txt\n$basesQ12txt\n$percQ12txt\n")
+		write(io, "$readsQ15txt\n$basesQ15txt\n$percQ15txt\n")
 	end
 	
 	plotReadLen2QualScatter(df, N50, outputDir)
 	plotReadLen2QualHistogram2D(df, outputDir)
+	plotReadLenDist(df.length, N50, outputDir)
 	return output_df
 end

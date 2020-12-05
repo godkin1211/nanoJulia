@@ -1,6 +1,6 @@
 module nanoJulia
 using Statistics, FASTX, DataFrames, Printf, Formatting, BioAlignments, XAM, Plots, HDF5
-export nanoread, generateStatSummary, plotReadLen2Qaul, plotHistogram2D, readFast5, readFastq, readBAM
+export nanoread, generateStatSummary, plotReadLen2QualScatter, plotReadLen2QualHistogram2D, readFast5, readFastq, readBAM
 # Readinfo types
 include("datatype.jl")
 include("utilities.jl")
@@ -9,7 +9,7 @@ include("nanoread.jl")
 include("info_handler.jl")
 include("statistics_handler.jl")
 
-function readFast5(fast5file::String, basecall_group::String, extract_fastq::Bool)::DataFrames.DataFrame
+function readFast5(fast5file::String, basecall_group::String)::DataFrames.DataFrame
 	h5open(fast5file) do f5
         file_version = read(attrs(f5), "file_version")
         extracted_info = nanoread(f5, file_version, basecall_group)
