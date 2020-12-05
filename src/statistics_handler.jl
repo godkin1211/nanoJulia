@@ -48,7 +48,7 @@ function plotReadLen2QualHistogram2D(df::DataFrames.DataFrame, outputDir::String
 	savefig(outputfile)
 end
 
-function plotReadLenDist(lengthRecords::Array{Int64,1}, N50::Int64, outputDir::Sting)
+function plotReadLenDist(lengthRecords::Array{Int64,1}, N50::Int64, outputDir::String)
 	gr()
 	outputfile = joinpath(outputDir, "read_length_distribution_histogram.png")
 	plot(lengthRecords, 

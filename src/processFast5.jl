@@ -31,7 +31,8 @@ function main()
 	outputdir = parsed_args["outputdir"]
 	basecall_group = parsed_args["basecall_group"]
 
-	if isdir(outputdir) 
+	if isdir(outputdir)
+		println("\033[1;31m[Warning] The output folder has already existed, so it will be renamed with additional suffix \"_bak\"\033[0m")
 		new_outputdir = string(outputdir, "_bak")
 		mv(outputdir, new_outputdir)
 	end
