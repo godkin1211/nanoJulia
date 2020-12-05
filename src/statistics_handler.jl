@@ -14,6 +14,19 @@ function plotSquiggle(signals::Array{Int16,1})
 	plot(timepoints, signals, w=3, xlabel = "Time (seconds)", ylabel= "Detected Current (pA)", legend = false)
 end
 
+function plotReadQual2IdentScatter(df::DataFrames.DataFrame, outputDir::String)
+	gr()
+	outputfile = joinpath(outputdir, "read_quality_vs_identity_dot.png")
+	plot(df.quality,
+		df.identity,
+		seriestype = :scatter,
+		title = "Read Quality vs Identity",
+		xlabel = "Phred Score",
+		ylabel = "Identity (%)",
+		dpi = 300)
+	savefig(outputfile)
+end
+
 function plotReadLen2QualScatter(df::DataFrames.DataFrame, N50::Int64, outputDir::String)
 	gr()
 	outputfile = joinpath(outputDir, "read_length_vs_quality_dot.png")
@@ -45,6 +58,13 @@ function plotReadLen2QualHistogram2D(df::DataFrames.DataFrame, outputDir::String
 	gr()
 	outputfile = joinpath(outputDir, "read_length_vs_quality_histogram.png")
 	histogram2d(df.length, df.quality, nbins = 50)
+	savefig(outputfile)
+end
+
+function plotReadQual2IdentHistogram2D(df::DataFrames.DataFrame, outputDir::String)
+	gr()
+	outputfile = joinpath(outputDir, "read_quality_vs_identity_histogram.png")
+	histogram2d(df.quality, df.identity, nbins = 50)
 	savefig(outputfile)
 end
 
@@ -128,5 +148,11 @@ function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::
 	plotReadLen2QualScatter(df, N50, outputDir)
 	plotReadLen2QualHistogram2D(df, outputDir)
 	plotReadLenDist(df.length, N50, outputDir)
+
+	if ncol(df) == 3
+		plotReadQual2IdentScatter(df, outputDir)
+		plotReadQual2IdentHistogram2D(df, outputDir)
+	end
+	
 	return output_df
 end
