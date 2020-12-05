@@ -153,6 +153,6 @@ function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::
 		plotReadQual2IdentScatter(df, outputDir)
 		plotReadQual2IdentHistogram2D(df, outputDir)
 	end
-	
+
 	return output_df
 end
