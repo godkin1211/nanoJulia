@@ -3,7 +3,7 @@ function nanoread end
 
 # SequencingSummary Reader
 function nanoread(input::DataFrame)
-	return DataFrame(quality=round(input.mean_qscore_template, digits=1), length=input.sequence_length_template)
+	return DataFrame(quality=round.(input.mean_qscore_template, digits=1), length=input.sequence_length_template)
 end
 
 
