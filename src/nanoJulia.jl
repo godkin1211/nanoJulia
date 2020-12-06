@@ -1,5 +1,5 @@
 module nanoJulia
-using Statistics, FASTX, DataFrames, Printf, Formatting, BioAlignments, XAM, Plots, HDF5
+using Statistics, FASTX, DataFrames, Printf, Formatting, BioAlignments, XAM, Plots, HDF5, CSV
 export nanoread, generateStatSummary, plotReadLen2QualScatter, 
        plotReadLen2QualHistogram2D, readFast5, readFastq, readBAM,
        plotReadQual2IdentScatter, plotReadQual2IdentHistogram2D,
@@ -36,4 +36,7 @@ function readBAM(bamfile::String)::DataFrames.DataFrame
 end
 
 
+function readSeqSummary(seqsummaryfile::String)::DataFrames.DataFrame
+    extracted_info = CSV.File(seqsummaryfile) |> DataFrame |> nanoread
+    return extracted_info
 end
