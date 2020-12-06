@@ -3,7 +3,7 @@ using Statistics, FASTX, DataFrames, Printf, Formatting, BioAlignments, XAM, Plo
 export nanoread, generateStatSummary, plotReadLen2QualScatter, 
        plotReadLen2QualHistogram2D, readFast5, readFastq, readBAM,
        plotReadQual2IdentScatter, plotReadQual2IdentHistogram2D,
-       plotReadLenDist, plotSquiggle
+       plotReadLenDist, plotSquiggle, readSeqSummary
 # Readinfo types
 include("datatype.jl")
 include("utilities.jl")
@@ -39,4 +39,6 @@ end
 function readSeqSummary(seqsummaryfile::String)::DataFrames.DataFrame
     extracted_info = CSV.File(seqsummaryfile) |> DataFrame |> nanoread
     return extracted_info
+end
+
 end

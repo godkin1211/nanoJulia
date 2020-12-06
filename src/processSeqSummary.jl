@@ -31,7 +31,7 @@ function main()
 
 	length2qualityTextFile = joinpath(outputdir, "readlength_vs_readquality.tsv") 
 
-    println("\033[1;32m* Start parsing this BAM file...\033[0m")
+    println("\033[1;32m* Start parsing this sequencing summary file...\033[0m")
 	output_table = readSeqSummary(inputfile)
 	println("\033[1;32m* Writing output file...\033[0m")
 	output_table |> CSV.write(length2qualityTextFile)
