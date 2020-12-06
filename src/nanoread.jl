@@ -16,7 +16,7 @@ function nanoread(input::FASTX.FASTQ.Reader)
 	Threads.@threads for i in 1:recordnum
 		@inbounds readsinfo[i] = get_info(records[i])
 	end
-	extract_info(readsinfo)
+	return extract_info(readsinfo)
 end
 
 
@@ -29,7 +29,7 @@ function nanoread(input::XAM.BAM.Reader)
         read!(input, record)
         push!(readsinfo, get_info(record))
     end
-	extract_info(readsinfo)
+	return extract_info(readsinfo)
 end
 
 
