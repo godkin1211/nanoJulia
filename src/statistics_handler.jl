@@ -57,14 +57,14 @@ end
 function plotReadLen2QualHistogram2D(df::DataFrames.DataFrame, outputDir::String)
 	gr()
 	outputfile = joinpath(outputDir, "read_length_vs_quality_histogram.png")
-	histogram2d(df.length, df.quality, nbins = 50)
+	histogram2d(df.length, df.quality, nbins = 50, dpi=300, xlabel="Read Length (bp)", ylabel="Phred Score", title="Read Length vs Quality")
 	savefig(outputfile)
 end
 
 function plotReadQual2IdentHistogram2D(df::DataFrames.DataFrame, outputDir::String)
 	gr()
 	outputfile = joinpath(outputDir, "read_quality_vs_identity_histogram.png")
-	histogram2d(df.quality, df.identity, nbins = 50)
+	histogram2d(df.quality, df.identity, nbins = 50, dpi=300, xlabel="Phred Score", ylabel="Identity (%)", title="Read Quality vs Identity")
 	savefig(outputfile)
 end
 
