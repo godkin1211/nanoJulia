@@ -1,7 +1,13 @@
 # Define a generic function
 function nanoread end
 
-# FASTQ File Reader
+# SequencingSummary Reader
+function nanoread(input::DataFrame)
+	return DataFrame(quality=round(input.mean_qscore_template, digits=1), length=input.sequence_length_template)
+end
+
+
+# Fastq File Reader
 function nanoread(input::FASTX.FASTQ.Reader)
 	records = collect(input);
 	remove_bad_read!(records);
