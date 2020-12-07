@@ -1,3 +1,22 @@
+# Calculate GC content
+function calculate_GC_content end
+
+function calculate_GC_content(read::FASTX.FASTQ.Record)::Float64
+	seq = FASTQ.sequence(read)
+	seqlen = FASTQ.seqlen(read)
+	nucl_comp = composition(seq)
+	gc_content = (nucl_comp[DNA_C] + nucl_comp[DNA_G]) / seqlen |> c->round(c, digits=4)
+	return gc_content
+end
+
+function calculate_GC_content(read::XAM.BAM.Record)::Float64
+	seq = BAM.sequence(read)
+	seqlen = BAM.seqlength(read)
+	nucl_comp = composition(seq)
+	gc_content = (nucl_comp[DNA_C] + nucl_comp[DNA_G]) / seqlen |> c->round(c, digits=4)
+	return gc_content
+end
+
 # Convert Phred Score into error probabilities
 phred2prob(q::UInt8) = 10^(q/(-10))
 
