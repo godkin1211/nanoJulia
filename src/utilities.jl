@@ -1,7 +1,7 @@
 # Calculate GC content
 function calculate_GC_content end
 
-function calculate_GC_content(theread::FASTX.FASTQ.Record)::Float64
+function calculate_GC_content(theread::FASTQ.Record)::Float64
 	seq = FASTQ.sequence(theread)
 	seqlen = FASTQ.seqlen(theread)
 	nucl_comp = composition(seq)
@@ -9,7 +9,7 @@ function calculate_GC_content(theread::FASTX.FASTQ.Record)::Float64
 	return gc_content
 end
 
-function calculate_GC_content(reads::FASTX.FASTQ.Reader{TranscodingStreams.TranscodingStream{TranscodingStreams.Noop,IOStream}})::Array{Float64,1}
+function calculate_GC_content(reads::FASTQ.Reader)::Array{Float64,1}
 	gc_content = Float64[]
 	record = FASTQ.Record()
 	while !eof(reads)
@@ -20,7 +20,7 @@ function calculate_GC_content(reads::FASTX.FASTQ.Reader{TranscodingStreams.Trans
 	return gc_content
 end
 
-function calculate_GC_content(theread::XAM.BAM.Record)::Float64
+function calculate_GC_content(theread::BAM.Record)::Float64
 	seq = BAM.sequence(theread)
 	seqlen = BAM.seqlength(theread)
 	nucl_comp = composition(seq)
@@ -28,7 +28,7 @@ function calculate_GC_content(theread::XAM.BAM.Record)::Float64
 	return gc_content
 end
 
-function calculate_GC_contents(reads::XAM.BAM.Reader{IOStream})::Array{Float64,1}
+function calculate_GC_contents(reads::BAM.Reader)::Array{Float64,1}
 	gc_content = Float64[]
 	record = BAM.Record()
 	while !eof(reads)
