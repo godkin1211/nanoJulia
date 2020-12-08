@@ -1,19 +1,61 @@
 # Calculate GC content
 function calculate_GC_content end
 
-function calculate_GC_content(read::FASTX.FASTQ.Record)::Float64
-	seq = FASTQ.sequence(read)
-	seqlen = FASTQ.seqlen(read)
+function calculate_GC_content(theread::FASTX.FASTQ.Record)::Float64
+	seq = FASTQ.sequence(theread)
+	seqlen = FASTQ.seqlen(theread)
 	nucl_comp = composition(seq)
 	gc_content = (nucl_comp[DNA_C] + nucl_comp[DNA_G]) / seqlen |> c->round(c, digits=4)
 	return gc_content
 end
 
-function calculate_GC_content(read::XAM.BAM.Record)::Float64
-	seq = BAM.sequence(read)
-	seqlen = BAM.seqlength(read)
+function calculate_GC_content(reads::FASTX.FASTQ.Reader{TranscodingStreams.TranscodingStream{TranscodingStreams.Noop,IOStream}})::Array{Float64,1}
+	gc_content = Float64[]
+	record = FASTQ.Record()
+	while !eof(reads)
+		read!(reads, record)
+		gc = calculate_GC_content(record)
+		push!(gc_content, gc)
+	end
+	return gc_content
+end
+
+function calculate_GC_content(theread::XAM.BAM.Record)::Float64
+	seq = BAM.sequence(theread)
+	seqlen = BAM.seqlength(theread)
 	nucl_comp = composition(seq)
 	gc_content = (nucl_comp[DNA_C] + nucl_comp[DNA_G]) / seqlen |> c->round(c, digits=4)
+	return gc_content
+end
+
+function calculate_GC_contents(reads::XAM.BAM.Reader{IOStream})::Array{Float64,1}
+	gc_content = Float64[]
+	record = BAM.Record()
+	while !eof(reads)
+		empty!(record)
+		read!(reads, record)
+		gc = calculate_GC_content(record)
+		push!(gc_content, gc)
+	end
+	return gc_content
+end
+
+function calculate_GC_content(theread::HDF5.File, h5version::Float64, fqpath::String)::Float64
+	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
+	return gc_content
+end
+
+function calculate_GC_content(theread::HDF5.Group, fqpath)::Float64
+	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
+	return gc_content
+end
+
+function calculate_GC_content(reads::HDF5.File, h5version::String, fqpath::String)::Array{Float64,1}
+	readIDs = names(reads)
+	gc_content = zeros(Float64, length(readIDs))
+	@inbounds for i=1:length(readIDs)
+		gc_content[i] = read(reads[readIDs[i]], fqpath) |> FASTQ.Record |> calculate_GC_content
+	end
 	return gc_content
 end
 
