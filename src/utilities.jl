@@ -40,21 +40,24 @@ function calculate_GC_contents(reads::XAM.BAM.Reader{IOStream})::Array{Float64,1
 	return gc_content
 end
 
-function calculate_GC_content(theread::HDF5.File, h5version::Float64, fqpath::String)::Float64
+function calculate_GC_content(theread::HDF5.File, h5version::Float64, basecallGroup::String)::Float64
+	fqpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
 	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
 	return gc_content
 end
 
-function calculate_GC_content(theread::HDF5.Group, fqpath)::Float64
+function calculate_GC_content(theread::HDF5.Group, basecallGroup::String)::Float64
+	fqpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
 	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
 	return gc_content
 end
 
-function calculate_GC_content(reads::HDF5.File, h5version::String, fqpath::String)::Array{Float64,1}
+function calculate_GC_content(reads::HDF5.File, h5version::String, basecallGroup::String)::Array{Float64,1}
 	readIDs = names(reads)
 	gc_content = zeros(Float64, length(readIDs))
 	@inbounds for i=1:length(readIDs)
-		gc_content[i] = read(reads[readIDs[i]], fqpath) |> FASTQ.Record |> calculate_GC_content
+		theread = reads[readIDs[i]]
+		gc_content[i] = calculate_GC_content(theread, basecallGroup)
 	end
 	return gc_content
 end
