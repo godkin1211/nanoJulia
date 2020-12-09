@@ -1,3 +1,4 @@
+# Readinfo types
 # A container for storage of extracted fastq info
 struct FastqInfo
 	quality::Float64

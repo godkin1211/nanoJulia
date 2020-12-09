@@ -4,7 +4,7 @@ export nanoread, generateStatSummary, plotReadLen2QualScatter,
        plotReadLen2QualHistogram2D, readFast5, readFastq, readBAM,
        plotReadQual2IdentScatter, plotReadQual2IdentHistogram2D,
        plotReadLenDist, plotSquiggle, readSeqSummary, calculate_GC_content
-# Readinfo types
+
 include("datatype.jl")
 include("utilities.jl")
 include("record_handler.jl")
