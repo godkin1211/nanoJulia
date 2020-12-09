@@ -43,7 +43,7 @@ function nanoread(input::HDF5.File, h5ver::String, basecallGroup::String)
 		thisread = readIDs[i]
 		readrecord = input[thisread]
 		summaryInfo = attrs(readrecord[dirpath])
-		readsinfo[i] = get_info(summaryInfo)
+		readsinfo[i] = get_info(summaryInfo, readrecord, basecallGroup)
 	end
 	filter!(e -> e !== missing, readsinfo)
 	return extract_info(readsinfo)
@@ -54,6 +54,6 @@ end
 function nanoread(input::HDF5.File, h5ver::Float64, basecallGroup::String)
 	dirpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
 	summaryInfo = attrs(input[dirpath])
-	readinfo = get_info(summaryInfo)
-	return DataFrame(quality = readinfo.quality, length = readinfo.length)
+	readinfo = get_info(summaryInfo, input, h5ver, basecallGroup)
+	return DataFrame(quality = readinfo.quality, length = readinfo.length, gc_content = readinfo.gc)
 end

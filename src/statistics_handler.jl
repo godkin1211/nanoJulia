@@ -78,8 +78,26 @@ function plotReadLenDist(lengthRecords::Array{Int64,1}, N50::Int64, outputDir::S
 		 legend=false, 
 		 xlabel = "Read Length (bp)",
 		 ylabel = "Read Counts",
+		 title = "Read Length Distribution",
 		 dpi = 300)
 	vline!([N50], lw=2, lab="N50")
+	savefig(outputfile)
+end
+
+function plotGCcontentDist(GCRecords::Array{Float64,1}, avgGCcontent::Float64, outputDir::String)
+	transformedGCrecords = GCRecords .* 100
+	gr()
+	outputfile = joinpath(outputDir, "GC_distribution_histogram.png")
+	plot(transformedGCrecords, 
+		 seriestype=:histogram, 
+		 bins=400, 
+		 minorticks=true, 
+		 legend=false, 
+		 xlabel = "GC Content (%)",
+		 ylabel = "Read Counts",
+		 title = "GC-content Distrbution",
+		 dpi = 300)
+		vline!([avgGCcontent], lw=2, lab="Mean GC-content")
 	savefig(outputfile)
 end
 
@@ -88,12 +106,13 @@ end
 function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::Int64, outputDir::String)::DataFrames.DataFrame
 	stat_summary = describe(df)
 	readNum = size(df, 1)
+	avg_gc_content = mean_gc_content(df.gc_content)
 	readsQ7, basesQ7, percQ7 = getQScoreOverQ(df, 7, totalLength)
 	readsQ10, basesQ10, percQ10 = getQScoreOverQ(df, 10, totalLength)
 	readsQ12, basesQ12, percQ12 = getQScoreOverQ(df, 12, totalLength)
 	readsQ15, basesQ15, percQ15 = getQScoreOverQ(df, 15, totalLength)
 	output_df = DataFrame(Property = AbstractString[], Value = Number[])
-	if ncol(df) == 3
+	if ncol(df) == 4
 		meanQual, meanLen, meanIdent = tuple(round.(stat_summary[!,:mean], digits=1)...)
 		medianQual, medianLen, medianIdent = tuple(stat_summary[!,:median]...)
 		push!(output_df, ("Average Identity", meanIdent))
@@ -108,6 +127,7 @@ function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::
 	push!(output_df, ("Median Read Length", medianLen))
 	push!(output_df, ("Mean Read Quality", meanQual))
 	push!(output_df, ("Median Read Quality", medianQual))
+	push!(output_df, ("Mean GC-Content", avg_gc_content))
 	push!(output_df, ("Read N50", N50))
 	push!(output_df, ("Read Numbers", readNum))
 	push!(output_df, ("Total Bases", totalLength))
@@ -119,6 +139,7 @@ function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::
 	readN50txt = @sprintf "Read N50: %36s" format(N50, commas=true)
 	readNumtxt = @sprintf "Read Number: %33s" format(readNum, commas=true)
 	totalBasestxt = @sprintf "Total Bases: %33s" format(totalLength, commas=true)
+	avgGCtxt = @sprintf "Mean GC-Content (%%): %25s" string(avg_gc_content*100, " %")
 	readsQ7txt = @sprintf "Reads with quality score > 7: %16s" format(readsQ7, commas=true)
 	basesQ7txt = @sprintf "Bases with quality score > 7: %16s" format(basesQ7, commas=true)
 	percQ7txt = @sprintf "Percentage of bases (Q>7): %19s" percQ7
@@ -134,10 +155,10 @@ function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::
 
 	outputfile = joinpath(outputDir, "statistics_summary.txt")
 	open(outputfile, "w") do io
-		if ncol(df) == 3
-			write(io, "$meanQualtxt\n$meanLentxt\n$meanIdenttxt\n$medianQualtxt\n$medianLentxt\n$medianIdenttxt\n$readN50txt\n$readNumtxt\n$totalBasestxt\n")
+		if ncol(df) == 4
+			write(io, "$meanQualtxt\n$meanLentxt\n$meanIdenttxt\n$medianQualtxt\n$medianLentxt\n$medianIdenttxt\n$readN50txt\n$avgGCtxt\n$readNumtxt\n$totalBasestxt\n")
 		else
-			write(io, "$meanQualtxt\n$meanLentxt\n$medianQualtxt\n$medianLentxt\n$readN50txt\n$readNumtxt\n$totalBasestxt\n")
+			write(io, "$meanQualtxt\n$meanLentxt\n$medianQualtxt\n$medianLentxt\n$readN50txt\n$avgGCtxt\n$readNumtxt\n$totalBasestxt\n")
 		end
 		write(io, "$readsQ7txt\n$basesQ7txt\n$percQ7txt\n")
 		write(io, "$readsQ10txt\n$basesQ10txt\n$percQ10txt\n")
@@ -148,8 +169,9 @@ function generateStatSummary(df::DataFrames.DataFrame, totalLength::Int64, N50::
 	plotReadLen2QualScatter(df, N50, outputDir)
 	plotReadLen2QualHistogram2D(df, outputDir)
 	plotReadLenDist(df.length, N50, outputDir)
+	plotGCcontentDist(df.gc_content, avg_gc_content*100, outputDir)
 
-	if ncol(df) == 3
+	if ncol(df) == 4
 		plotReadQual2IdentScatter(df, outputDir)
 		plotReadQual2IdentHistogram2D(df, outputDir)
 	end

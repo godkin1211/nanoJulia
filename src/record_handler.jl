@@ -10,13 +10,13 @@ end
 
 function parse_f5read_record end
 
-function parse_f5read_record(record::HDF5Group, signalpath::String)::FASTX.FASTQ.Record
-	fastqpath = string("Analyses/$signalpath/BaseCalled_template/Fastq");
+function parse_f5read_record(record::HDF5Group, basecallGroup::String)::FASTX.FASTQ.Record
+	fastqpath = string("Analyses/$basecallGroup/BaseCalled_template/Fastq");
 	fastq = FASTQ.Record(read(record, fastqpath))
 end
 
-function parse_f5read_record(record::HDF5.File, signalpath::String)::FASTX.FASTQ.Record
-	fastqpath = string("Analyses/$signalpath/BaseCalled_template/Fastq");
+function parse_f5read_record(record::HDF5.File, basecallGroup::String)::FASTX.FASTQ.Record
+	fastqpath = string("Analyses/$basecallGroup/BaseCalled_template/Fastq");
 	fastq = FASTQ.Record(read(record, fastqpath))
 end
 
@@ -25,10 +25,19 @@ end
 function get_info end
 
 # Parse HDF5.Group
-function get_info(record::HDF5.Attributes)
-	readqual = read(record, "mean_qscore")
-	readlen = read(record, "sequence_length")
-	FastqInfo(readqual, readlen)
+function get_info(recordAttrs::HDF5.Attributes, record::HDF5.Group, basecallGroup::String)
+	readqual = read(recordAttrs, "mean_qscore")
+	readlen = read(recordAttrs, "sequence_length")
+	readqc = calculate_GC_content(record, basecallGroup)
+	FastqInfo(readqual, readlen, readqc)
+end
+
+# Parse HDF5.File
+function get_info(recordAttrs::HDF5.Attributes, record::HDF5.File, h5ver::Float64, basecallGroup::String)
+	readqual = read(recordAttrs, "mean_qscore")
+	readlen = read(recordAttrs, "sequence_length")
+	readqc = calculate_GC_content(record, h5ver, basecallGroup)
+	FastqInfo(readqual, readlen, readqc)
 end
 
 # Parse BAM.Record
@@ -48,12 +57,14 @@ function get_info(record::XAM.BAM.Record)
 	readident = calculate_identity(nm, matches, gaps, cgaps)
 	readlen = BAM.seqlength(record)
 	readqual = BAM.quality(record) |> calculate_mean_readqual
-	return BAMInfo(readqual, readlen, readident)
+	readgc = calculate_GC_content(record)
+	return BAMInfo(readqual, readlen, readident, readgc)
 end
 
 # Parse FASTQ.Record
 function get_info(record::FASTX.FASTQ.Record)
 	readqual = FASTQ.quality(record) |> calculate_mean_readqual
 	readlen = FASTQ.seqlen(record)
-	FastqInfo(readqual, readlen)
+	readgc = calculate_GC_content(record)
+	FastqInfo(readqual, readlen, readgc)
 end

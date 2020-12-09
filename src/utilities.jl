@@ -28,7 +28,7 @@ function calculate_GC_content(theread::BAM.Record)::Float64
 	return gc_content
 end
 
-function calculate_GC_contents(reads::BAM.Reader)::Array{Float64,1}
+function calculate_GC_content(reads::BAM.Reader)::Array{Float64,1}
 	gc_content = Float64[]
 	record = BAM.Record()
 	while !eof(reads)
@@ -40,18 +40,22 @@ function calculate_GC_contents(reads::BAM.Reader)::Array{Float64,1}
 	return gc_content
 end
 
+# A FAST5 Record of asingle-read FAST5
 function calculate_GC_content(theread::HDF5.File, h5version::Float64, basecallGroup::String)::Float64
 	fqpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
 	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
 	return gc_content
 end
 
+
+# A FAST5 Record of A multi-reads FAST5
 function calculate_GC_content(theread::HDF5.Group, basecallGroup::String)::Float64
 	fqpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
 	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
 	return gc_content
 end
 
+# FAST5 Records of a multi-reads FAST5
 function calculate_GC_content(reads::HDF5.File, h5version::String, basecallGroup::String)::Array{Float64,1}
 	readIDs = names(reads)
 	gc_content = zeros(Float64, length(readIDs))
@@ -91,6 +95,9 @@ end
 # 'o' means the number of gap opens. 
 calculate_identity(n::Int64, m::Int64, g::Int64, o::Int64) = round((1.0 - (n-g+o)/(m+o)) * 100, digits = 3)
 
+# Calculate mean gc content
+
+mean_gc_content(gc_content::Array{Float64,1}) = round(mean(gc_content), digits=3)
 
 # Calculate sum of total read lengths
 totalLen(lengths::Array{Int64,1}) = sum(lengths)
