@@ -208,7 +208,6 @@ begin
 		seriestype = :histogram2d,
 		nbins = nbins_1,
 		title = "Read Length vs Read Quality",
-		legend = false,
 		xlabel = "Read length (bp)",
 		ylabel = "Phred Score")
 end
@@ -329,7 +328,7 @@ $ julia -JnanoJulia.so processFast5.jl -h
 # ╟─042642a6-3aed-11eb-191a-17796e1e69f8
 # ╠═213acc4a-3aed-11eb-331d-1b9a6c4cb004
 # ╟─7f0c927c-3aed-11eb-2607-3dd5841ceebb
-# ╠═90291f5e-3b55-11eb-02db-8be99e8f78ee
+# ╟─90291f5e-3b55-11eb-02db-8be99e8f78ee
 # ╠═be5284a0-3aed-11eb-114e-a129fd7542d5
 # ╟─718873e6-3af0-11eb-3d66-1f88abde9cdc
 # ╟─9b4a1072-3b56-11eb-1e05-f14374fc27b8
