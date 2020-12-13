@@ -41,7 +41,7 @@ function calculate_GC_content(reads::BAM.Reader)::Array{Float64,1}
 end
 
 # A FAST5 Record of asingle-read FAST5
-function calculate_GC_content(theread::HDF5.File, h5version::Float64, basecallGroup::String)::Float64
+function calculate_GC_content(theread::HDF5File, h5version::Float64, basecallGroup::String)::Float64
 	fqpath = "Analyses/$basecallGroup/BaseCalled_template/Fastq"
 	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
 	return gc_content
@@ -49,7 +49,7 @@ end
 
 
 # A FAST5 Record of A multi-reads FAST5
-function calculate_GC_content(theread::HDF5.Group, basecallGroup::String)::Float64
+function calculate_GC_content(theread::HDF5Group, basecallGroup::String)::Float64
 	fqpath = "Analyses/$basecallGroup/BaseCalled_template/Fastq"
 	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
 	return gc_content

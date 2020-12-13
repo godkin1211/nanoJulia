@@ -34,7 +34,7 @@ end
 
 
 # Miltiple-reads FAST5 File Reader
-function nanoread(input::HDF5.File, h5ver::String, basecallGroup::String)
+function nanoread(input::HDF5File, h5ver::String, basecallGroup::String)
 	dirpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
     readIDs = names(input)
 	readsnum = length(readIDs)
@@ -51,7 +51,7 @@ end
 
 
 # Single-read FAST5 File Reader
-function nanoread(input::HDF5.File, h5ver::Float64, basecallGroup::String)
+function nanoread(input::HDF5File, h5ver::Float64, basecallGroup::String)
 	dirpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
 	summaryInfo = attrs(input[dirpath])
 	readinfo = get_info(summaryInfo, input, h5ver, basecallGroup)

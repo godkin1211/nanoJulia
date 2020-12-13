@@ -263,8 +263,8 @@ end
 # ╔═╡ 6c4282ce-3b5a-11eb-1dfc-a9159b5a16ad
 md"## 8. Processing Fast5 files"
 
-# ╔═╡ 6a55b2f0-3cf5-11eb-1218-e16c1df49aab
-?readFast5
+# ╔═╡ 1d75e604-3d21-11eb-01d7-a75e5f4edfbc
+
 
 # ╔═╡ 851efb7e-3b5a-11eb-0c61-49555c0f91bf
 md"""```
@@ -279,8 +279,8 @@ end
 # ╔═╡ dca44304-3b5a-11eb-2b1b-c9b491518fc3
 md"## 9. Processing BAM file"
 
-# ╔═╡ 991ceacc-3cf5-11eb-32cd-bf18f3d34e59
-?readBAM
+# ╔═╡ 4928d00e-3d21-11eb-0c8a-11fc0ed94372
+
 
 # ╔═╡ e8777660-3b5a-11eb-2585-1747d497d802
 md"""```
@@ -294,8 +294,8 @@ end
 # ╔═╡ 29d19648-3b5b-11eb-038a-3f5216225a12
 md"## 10. Processing SequencingSummary file"
 
-# ╔═╡ b220666e-3cf5-11eb-0731-7ba6a69176d8
-?readSeqSummary
+# ╔═╡ 52cc0ef0-3d21-11eb-2257-ab7181a4171e
+
 
 # ╔═╡ 3baf4808-3b5b-11eb-0332-cd4191c64a26
 md"""```
@@ -346,13 +346,13 @@ $ julia -JnanoJulia.so processFast5.jl -h
 # ╟─e9c499c8-3b56-11eb-3e5a-5b887f90e73d
 # ╠═c85b8216-3aee-11eb-3b00-2f19c6b981c6
 # ╟─6c4282ce-3b5a-11eb-1dfc-a9159b5a16ad
-# ╠═6a55b2f0-3cf5-11eb-1218-e16c1df49aab
+# ╠═1d75e604-3d21-11eb-01d7-a75e5f4edfbc
 # ╟─851efb7e-3b5a-11eb-0c61-49555c0f91bf
 # ╟─dca44304-3b5a-11eb-2b1b-c9b491518fc3
-# ╠═991ceacc-3cf5-11eb-32cd-bf18f3d34e59
-# ╠═e8777660-3b5a-11eb-2585-1747d497d802
+# ╠═4928d00e-3d21-11eb-0c8a-11fc0ed94372
+# ╟─e8777660-3b5a-11eb-2585-1747d497d802
 # ╟─29d19648-3b5b-11eb-038a-3f5216225a12
-# ╠═b220666e-3cf5-11eb-0731-7ba6a69176d8
+# ╠═52cc0ef0-3d21-11eb-2257-ab7181a4171e
 # ╟─3baf4808-3b5b-11eb-0332-cd4191c64a26
 # ╟─ab40ff42-3b59-11eb-2502-b1a512615492
 # ╟─c5301f64-3b59-11eb-1c54-37237f9ee35a
