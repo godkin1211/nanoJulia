@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.16
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -26,7 +26,7 @@ md"# nanoJulia Tutorial: use fastq-files-processing as an example"
 md"""Copyright: (c) 2020 Health GeneTech Co."""
 
 # ╔═╡ 630678da-3b5c-11eb-2582-d9f4e971900d
-md"Michael Nostalgie <nostalgie.chiu@genebook.com.tw>"
+md"Author: Michael Nostalgie <nostalgie.chiu@genebook.com.tw>"
 
 # ╔═╡ 5703c6f6-3af2-11eb-1e24-33ae52fe8d26
 md"""## 1. Why we do rebuild a new wheel?
@@ -153,7 +153,7 @@ md"## 3. Setting input files"
 
 # ╔═╡ 80d4574e-3ae7-11eb-1b6e-27a843ecf98a
 begin
-	fastq_files_path = "/Home/godkin/Projects/test_fastq"
+	fastq_files_path = "/home/godkin/Projects/test_fastq"
 	fastq_files = joinpath.(fastq_files_path,readdir(fastq_files_path))
 end
 
@@ -162,7 +162,7 @@ md"## 4. Read and parse fastq files"
 
 # ╔═╡ 00250c30-3aea-11eb-25c1-fbc18c3b012f
 begin
-	output_table = mapreduce(f -> readFastq(f), vcat, fastq_files);
+	output_table = mapreduce(f -> readFastq(f), vcat, fastq_files)
 	first(output_table, 10)
 end
 
@@ -263,6 +263,9 @@ end
 # ╔═╡ 6c4282ce-3b5a-11eb-1dfc-a9159b5a16ad
 md"## 8. Processing Fast5 files"
 
+# ╔═╡ 6a55b2f0-3cf5-11eb-1218-e16c1df49aab
+?readFast5
+
 # ╔═╡ 851efb7e-3b5a-11eb-0c61-49555c0f91bf
 md"""```
 begin
@@ -276,17 +279,23 @@ end
 # ╔═╡ dca44304-3b5a-11eb-2b1b-c9b491518fc3
 md"## 9. Processing BAM file"
 
+# ╔═╡ 991ceacc-3cf5-11eb-32cd-bf18f3d34e59
+?readBAM
+
 # ╔═╡ e8777660-3b5a-11eb-2585-1747d497d802
 md"""```
 begin
 	bam_file_path = "/path/to/your/bamfile.bam"
-	output_table = readBam(bam_file_path)
+	output_table = readBAM(bam_file_path)
 	first(output_table, 10)
 end
 ```"""
 
 # ╔═╡ 29d19648-3b5b-11eb-038a-3f5216225a12
 md"## 10. Processing SequencingSummary file"
+
+# ╔═╡ b220666e-3cf5-11eb-0731-7ba6a69176d8
+?readSeqSummary
 
 # ╔═╡ 3baf4808-3b5b-11eb-0332-cd4191c64a26
 md"""```
@@ -337,10 +346,13 @@ $ julia -JnanoJulia.so processFast5.jl -h
 # ╟─e9c499c8-3b56-11eb-3e5a-5b887f90e73d
 # ╠═c85b8216-3aee-11eb-3b00-2f19c6b981c6
 # ╟─6c4282ce-3b5a-11eb-1dfc-a9159b5a16ad
+# ╠═6a55b2f0-3cf5-11eb-1218-e16c1df49aab
 # ╟─851efb7e-3b5a-11eb-0c61-49555c0f91bf
 # ╟─dca44304-3b5a-11eb-2b1b-c9b491518fc3
-# ╟─e8777660-3b5a-11eb-2585-1747d497d802
+# ╠═991ceacc-3cf5-11eb-32cd-bf18f3d34e59
+# ╠═e8777660-3b5a-11eb-2585-1747d497d802
 # ╟─29d19648-3b5b-11eb-038a-3f5216225a12
+# ╠═b220666e-3cf5-11eb-0731-7ba6a69176d8
 # ╟─3baf4808-3b5b-11eb-0332-cd4191c64a26
 # ╟─ab40ff42-3b59-11eb-2502-b1a512615492
 # ╟─c5301f64-3b59-11eb-1c54-37237f9ee35a
