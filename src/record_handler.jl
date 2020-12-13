@@ -15,7 +15,7 @@ function parse_f5read_record(record::HDF5Group, basecallGroup::String)::FASTX.FA
 	fastq = FASTQ.Record(read(record, fastqpath))
 end
 
-function parse_f5read_record(record::HDF5.File, basecallGroup::String)::FASTX.FASTQ.Record
+function parse_f5read_record(record::HDF5File, basecallGroup::String)::FASTX.FASTQ.Record
 	fastqpath = string("Analyses/$basecallGroup/BaseCalled_template/Fastq");
 	fastq = FASTQ.Record(read(record, fastqpath))
 end
@@ -25,7 +25,7 @@ end
 function get_info end
 
 # Parse HDF5.Group
-function get_info(recordAttrs::HDF5.Attributes, record::HDF5.Group, basecallGroup::String)
+function get_info(recordAttrs::HDF5.Attributes, record::HDF5Group, basecallGroup::String)
 	readqual = read(recordAttrs, "mean_qscore")
 	readlen = read(recordAttrs, "sequence_length")
 	readqc = calculate_GC_content(record, basecallGroup)
@@ -33,7 +33,7 @@ function get_info(recordAttrs::HDF5.Attributes, record::HDF5.Group, basecallGrou
 end
 
 # Parse HDF5.File
-function get_info(recordAttrs::HDF5.Attributes, record::HDF5.File, h5ver::Float64, basecallGroup::String)
+function get_info(recordAttrs::HDF5.Attributes, record::HDF5File, h5ver::Float64, basecallGroup::String)
 	readqual = read(recordAttrs, "mean_qscore")
 	readlen = read(recordAttrs, "sequence_length")
 	readqc = calculate_GC_content(record, h5ver, basecallGroup)
