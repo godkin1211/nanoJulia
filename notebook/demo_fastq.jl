@@ -15,7 +15,7 @@ end
 
 # ╔═╡ 7dbd82c8-3ae8-11eb-3c06-9f7be3a109a7
 begin
-	push!(LOAD_PATH, "/Users/godkin/Projects/nanoJulia/src")
+	push!(LOAD_PATH, "/Home/godkin/Projects/nanoJulia/src")
 	using nanoJulia, FASTX, PlutoUI, DataFrames, CSV, Plots, Statistics, Markdown, InteractiveUtils, Images
 end
 
@@ -140,8 +140,8 @@ ValueError: Lengths of sequence and quality values differs for 6bc232d8-2605-44a
 
 ### 1.3 Why Julia?
   - Write like Python, run like C
-  - High performance
-  - Dynamic typed
+  - Easys parallelisation, high performance
+  - Static/Dynamics typed
   - Composable
 """
 
@@ -153,7 +153,7 @@ md"## 3. Setting input files"
 
 # ╔═╡ 80d4574e-3ae7-11eb-1b6e-27a843ecf98a
 begin
-	fastq_files_path = "/Users/godkin/Projects/test_fastq"
+	fastq_files_path = "/Home/godkin/Projects/test_fastq"
 	fastq_files = joinpath.(fastq_files_path,readdir(fastq_files_path))
 end
 
