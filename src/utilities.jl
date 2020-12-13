@@ -42,7 +42,7 @@ end
 
 # A FAST5 Record of asingle-read FAST5
 function calculate_GC_content(theread::HDF5.File, h5version::Float64, basecallGroup::String)::Float64
-	fqpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
+	fqpath = "Analyses/$basecallGroup/BaseCalled_template/Fastq"
 	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
 	return gc_content
 end
@@ -50,7 +50,7 @@ end
 
 # A FAST5 Record of A multi-reads FAST5
 function calculate_GC_content(theread::HDF5.Group, basecallGroup::String)::Float64
-	fqpath = "Analyses/$basecallGroup/Summary/basecall_1d_template"
+	fqpath = "Analyses/$basecallGroup/BaseCalled_template/Fastq"
 	gc_content = read(theread, fqpath) |> FASTQ.Record |> calculate_GC_content
 	return gc_content
 end
@@ -81,11 +81,11 @@ end
 function parse_cigar(cigar::Tuple{Array{BioAlignments.Operation,1}, Array{Int64,1}})
 	operations = cigar[1];
 	op_counts = cigar[2];
-	indel_idx = findall(map(i -> i == OP_INSERT || i == OP_DELETE, operations));
-	match_idx = findall(map(i -> i == OP_MATCH, operations));
-	gaps = sum(op_counts[indel_idx]);
-	cgaps = length(indel_idx);
-	matches = sum(op_counts[match_idx]);
+	indel_idx = findall(map(i -> i == OP_INSERT || i == OP_DELETE, operations))
+	match_idx = findall(map(i -> i == OP_MATCH, operations))
+	gaps = sum(op_counts[indel_idx])
+	cgaps = length(indel_idx)
+	matches = sum(op_counts[match_idx])
 	(matches, gaps, cgaps)
 end
 
