@@ -25,7 +25,7 @@ end
 function get_info end
 
 # Parse HDF5.Group
-function get_info(recordAttrs::HDF5.Attributes, record::HDF5Group, basecallGroup::String)
+function get_info(recordAttrs::HDF5Attributes, record::HDF5Group, basecallGroup::String)
 	readqual = read(recordAttrs, "mean_qscore")
 	readlen = read(recordAttrs, "sequence_length")
 	readqc = calculate_GC_content(record, basecallGroup)
@@ -33,7 +33,7 @@ function get_info(recordAttrs::HDF5.Attributes, record::HDF5Group, basecallGroup
 end
 
 # Parse HDF5.File
-function get_info(recordAttrs::HDF5.Attributes, record::HDF5File, h5ver::Float64, basecallGroup::String)
+function get_info(recordAttrs::HDF5Attributes, record::HDF5File, h5ver::Float64, basecallGroup::String)
 	readqual = read(recordAttrs, "mean_qscore")
 	readlen = read(recordAttrs, "sequence_length")
 	readqc = calculate_GC_content(record, h5ver, basecallGroup)
