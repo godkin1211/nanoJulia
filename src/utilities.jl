@@ -56,7 +56,7 @@ function calculate_GC_content(theread::HDF5Group, basecallGroup::String)::Float6
 end
 
 # FAST5 Records of a multi-reads FAST5
-function calculate_GC_content(reads::HDF5.File, h5version::String, basecallGroup::String)::Array{Float64,1}
+function calculate_GC_content(reads::HDF5File, h5version::String, basecallGroup::String)::Array{Float64,1}
 	readIDs = names(reads)
 	gc_content = zeros(Float64, length(readIDs))
 	@inbounds for i=1:length(readIDs)
