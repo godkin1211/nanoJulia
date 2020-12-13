@@ -14,5 +14,5 @@ function extract_info(readsinfo::Array{BAMInfo,1})
 	lengths = map(e -> e.length, readsinfo)
 	identities = map(e -> round(e.identity, digits=1), readsinfo)
 	gcs = map(e -> e.gc, readsinfo)
-	DataFrame(quality = quals, length = lengths, identity = identities)
+	DataFrame(quality = quals, length = lengths, identity = identities, gc_content = gcs)
 end
