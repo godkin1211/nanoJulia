@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.17
+# v0.12.4
 
 using Markdown
 using InteractiveUtils
@@ -15,8 +15,12 @@ end
 
 # ╔═╡ 7dbd82c8-3ae8-11eb-3c06-9f7be3a109a7
 begin
-	push!(LOAD_PATH, "/Home/godkin/Projects/nanoJulia/src")
-	using nanoJulia, FASTX, PlutoUI, DataFrames, CSV, Plots, Statistics, Markdown, InteractiveUtils, Images
+	#push!(LOAD_PATH, "/Home/godkin/Projects/nanoJulia/src")
+	using Pkg
+	if !haskey(Pkg.installed(), "nanoJulia")
+		Pkg.add(url="https://github.com/godkin1211/nanoJulia.git")
+	end
+	using nanoJulia, FASTX, PlutoUI, DataFrames, CSV, Plots, Statistics
 end
 
 # ╔═╡ 0ee8b936-3ae7-11eb-2b11-e5a4b8701e09
