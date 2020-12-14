@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.4
+# v0.12.17
 
 using Markdown
 using InteractiveUtils
@@ -16,11 +16,18 @@ end
 # ╔═╡ 7dbd82c8-3ae8-11eb-3c06-9f7be3a109a7
 begin
 	#push!(LOAD_PATH, "/Home/godkin/Projects/nanoJulia/src")
-	using Pkg
-	if !haskey(Pkg.installed(), "nanoJulia")
-		Pkg.add(url="https://github.com/godkin1211/nanoJulia.git")
-	end
+	#using Pkg
+	#if !haskey(Pkg.installed(), "nanoJulia")
+	#	Pkg.add(url="https://github.com/godkin1211/nanoJulia.git")
+	#end
 	using nanoJulia, FASTX, PlutoUI, DataFrames, CSV, Plots, Statistics
+end
+
+# ╔═╡ 1d75e604-3d21-11eb-01d7-a75e5f4edfbc
+begin
+	using HDF5
+	single_read_fast5_file = "/home/godkin/Projects/test_fast5/single/0/76ffff01-cc3b-476e-bf84-1096107fc9b0.fast5"
+	sf5 = h5open(single_read_fast5_file)
 end
 
 # ╔═╡ 0ee8b936-3ae7-11eb-2b11-e5a4b8701e09
@@ -267,8 +274,8 @@ end
 # ╔═╡ 6c4282ce-3b5a-11eb-1dfc-a9159b5a16ad
 md"## 8. Processing Fast5 files"
 
-# ╔═╡ 1d75e604-3d21-11eb-01d7-a75e5f4edfbc
-
+# ╔═╡ 42f12910-3e17-11eb-0ab2-99fc8b8988ed
+close(sf5)
 
 # ╔═╡ 851efb7e-3b5a-11eb-0c61-49555c0f91bf
 md"""```
@@ -299,7 +306,11 @@ end
 md"## 10. Processing SequencingSummary file"
 
 # ╔═╡ 52cc0ef0-3d21-11eb-2257-ab7181a4171e
-
+begin
+	seqsummary_file = "/home/godkin/Projects/sequencing_summary.txt"
+	seqSummary = CSV.File(seqsummary_file) |> DataFrame
+	first(seqSummary, 10)
+end
 
 # ╔═╡ 3baf4808-3b5b-11eb-0332-cd4191c64a26
 md"""```
@@ -351,6 +362,7 @@ $ julia -JnanoJulia.so processFast5.jl -h
 # ╠═c85b8216-3aee-11eb-3b00-2f19c6b981c6
 # ╟─6c4282ce-3b5a-11eb-1dfc-a9159b5a16ad
 # ╠═1d75e604-3d21-11eb-01d7-a75e5f4edfbc
+# ╠═42f12910-3e17-11eb-0ab2-99fc8b8988ed
 # ╟─851efb7e-3b5a-11eb-0c61-49555c0f91bf
 # ╟─dca44304-3b5a-11eb-2b1b-c9b491518fc3
 # ╠═4928d00e-3d21-11eb-0c8a-11fc0ed94372
