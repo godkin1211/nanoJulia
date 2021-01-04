@@ -274,6 +274,9 @@ end
 # ╔═╡ 6c4282ce-3b5a-11eb-1dfc-a9159b5a16ad
 md"## 8. Processing Fast5 files"
 
+# ╔═╡ 8afd34ee-3e74-11eb-0c10-2d1633fff849
+
+
 # ╔═╡ 42f12910-3e17-11eb-0ab2-99fc8b8988ed
 close(sf5)
 
@@ -311,6 +314,9 @@ begin
 	seqSummary = CSV.File(seqsummary_file) |> DataFrame
 	first(seqSummary, 10)
 end
+
+# ╔═╡ 10ce8924-3e75-11eb-3099-5dea9d683ea4
+
 
 # ╔═╡ 3baf4808-3b5b-11eb-0332-cd4191c64a26
 md"""```
@@ -362,6 +368,7 @@ $ julia -JnanoJulia.so processFast5.jl -h
 # ╠═c85b8216-3aee-11eb-3b00-2f19c6b981c6
 # ╟─6c4282ce-3b5a-11eb-1dfc-a9159b5a16ad
 # ╠═1d75e604-3d21-11eb-01d7-a75e5f4edfbc
+# ╠═8afd34ee-3e74-11eb-0c10-2d1633fff849
 # ╠═42f12910-3e17-11eb-0ab2-99fc8b8988ed
 # ╟─851efb7e-3b5a-11eb-0c61-49555c0f91bf
 # ╟─dca44304-3b5a-11eb-2b1b-c9b491518fc3
@@ -369,6 +376,7 @@ $ julia -JnanoJulia.so processFast5.jl -h
 # ╟─e8777660-3b5a-11eb-2585-1747d497d802
 # ╟─29d19648-3b5b-11eb-038a-3f5216225a12
 # ╠═52cc0ef0-3d21-11eb-2257-ab7181a4171e
+# ╠═10ce8924-3e75-11eb-3099-5dea9d683ea4
 # ╟─3baf4808-3b5b-11eb-0332-cd4191c64a26
 # ╟─ab40ff42-3b59-11eb-2502-b1a512615492
 # ╟─c5301f64-3b59-11eb-1c54-37237f9ee35a
